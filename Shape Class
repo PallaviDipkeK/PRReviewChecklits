@@ -1,0 +1,159 @@
+//
+//  ContentView.swift
+//  DemoTestApp
+//
+//  Created by Pallavi on 23/09/23.
+//
+
+import SwiftUI
+
+struct ContentView: View {
+    @State private var animated: Bool = false
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            
+            AddLine()
+                .stroke(style: StrokeStyle(lineWidth: 4))
+                .frame(width: 2, height: 50)
+            Doller()
+                .stroke(style: StrokeStyle(lineWidth: 4))
+                .frame(width: 300, height: 300)
+            AddLine()
+                .stroke(style: StrokeStyle(lineWidth: 4))
+                .frame(width: 2, height: 50)
+            
+        }
+        .onAppear {
+            withAnimation(Animation.easeInOut.repeatForever()) {
+                animated.toggle()
+            }
+        }
+    }
+}
+
+
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
+
+struct AnimateRectangalRadius: Shape {
+    
+    var cornerRadius: CGFloat
+    
+    var animatableData: CGFloat {
+        get {
+            cornerRadius
+        } set {
+            cornerRadius = newValue
+        }
+    }
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: .zero)
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+            
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - cornerRadius))
+            
+            path.addArc(center: CGPoint(x: rect.maxX - cornerRadius, y: rect.maxY - cornerRadius),
+                        radius: cornerRadius,
+                        startAngle: Angle(degrees: 0),
+                        endAngle: Angle(degrees: 360),
+                        clockwise: false)
+            
+            path.addLine(to: CGPoint(x: rect.maxX - cornerRadius, y: rect.maxY))
+            
+            
+            
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+            
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.minY))
+            
+        }
+        
+    }
+}
+
+struct WaterDrop: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.addQuadCurve(
+                to:CGPoint(x: rect.midX, y: rect.maxY),
+                control: CGPoint(x: rect.minX, y: rect.maxY))
+            path.addQuadCurve(
+                to:CGPoint(x: rect.midX, y: rect.minY),
+                control: CGPoint(x: rect.maxX, y: rect.maxY))
+        }
+        
+    }
+}
+
+struct Doller: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: CGPoint(x: rect.midX + 80, y: rect.midY - 80))
+            path.addLine(to: CGPoint(x: rect.midX + 80, y: rect.midY - 20))
+
+            path.addArc(center: CGPoint(x: rect.midX + 5, y: rect.midY - 80),
+                        radius: rect.height / 4,
+                        startAngle: Angle(degrees: 0),
+                        endAngle: Angle(degrees: 180),
+                        clockwise: true)
+            path.addLine(to: CGPoint(x: rect.midX - 70, y: rect.midY - 30 ))
+            path.addLine(to: CGPoint(x: rect.maxX - 70, y: rect.midY + 20))
+            path.addLine(to: CGPoint(x: rect.maxX - 70, y: rect.maxY - 90))
+            
+            path.addArc(center: CGPoint(x: rect.midX + 5, y: rect.midY + 80),
+                        radius: rect.height / 4,
+                        startAngle: Angle(degrees: 0),
+                        endAngle: Angle(degrees: 180),
+                        clockwise: false)
+            path.addLine(to: CGPoint(x: rect.minX + 80, y: rect.midY + 20))
+
+//            path.addQuadCurve(
+//                to:CGPoint(x: rect.midX - 60, y: rect.maxY ),
+//                control: CGPoint(x: rect.maxX, y: rect.midY + 60))
+            
+        }
+        
+    }
+}
+
+struct AddLine: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+            
+        }
+        
+    }
+}
+
+struct Pocman: Shape {
+    var cornerRadius: Double
+    
+    var animatableData: Double {
+        get {
+            cornerRadius
+        } set {
+            cornerRadius = newValue
+        }
+    }
+    
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: CGPoint(x: rect.midX, y: rect.midY))
+            path.addArc(center: CGPoint(x: rect.midX, y: rect.midY),
+                        radius: rect.height / 2,
+                        startAngle: Angle(degrees: cornerRadius),
+                        endAngle:
+                            Angle(degrees: 360 - cornerRadius),
+                        clockwise: false)
+        }
+    }
+}
